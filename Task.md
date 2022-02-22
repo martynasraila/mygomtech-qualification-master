@@ -9,7 +9,10 @@
 * Validate login username, password
 * Add loader to login page
 * After Email update page should not be reloaded
-* Add worng emails filter
+* Add wrong emails filter
 * Add tests
 * Refactor to make the code neat and clean - this will keep your teammates happy
 * Fix as many errors as you notice
+
+Additional errors found:
+Credentials in url
