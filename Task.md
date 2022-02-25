@@ -4,7 +4,7 @@
 
  Our customer support team is receiving a storm of complaints. You're the only guy who can solve this problem. Here's what you have to do to fix the situation:
 
-* You may notice that logout button is not working
+Done: * You may notice that logout button is not working
 * Create additional tab (old) that should show emails older than 30d
 * Validate login username, password
 * Add loader to login page
@@ -15,4 +15,5 @@
 * Fix as many errors as you notice
 
 Additional errors found:
-Credentials in url
+*Credentials in url
+*Using get method instead of post for login in endpoints/authentication
