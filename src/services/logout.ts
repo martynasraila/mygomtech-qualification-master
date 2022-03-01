@@ -5,8 +5,8 @@ const logout = async () => {
 	const key = "token";
 	const token = localStorage.getItem(key);
 	const url = getUrl(API.Logout);
-	localStorage.getItem(key) && localStorage.removeItem(key);
-	const response = await fetch(url, {headers: {'Authorization': `token ${token}`}});
+	token && localStorage.removeItem(key);
+	const response = await fetch(url, {headers: {'Authorization': `Bearer ${token}`}});
 };
 
 export default logout;
