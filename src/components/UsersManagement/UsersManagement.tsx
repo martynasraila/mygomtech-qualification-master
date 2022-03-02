@@ -47,7 +47,7 @@ const UsersManagement = () => {
           <List items={items.filter((item,index) => itemHasReusedEmail(item, items,index))}/>
         </Route>
         <Route path={Routes.Old}>
-          <List items={items.filter((item) => itemHasOldEmail(item, items))}/>
+          <List items={items.filter((item) => itemHasOldEmail(item))}/>
         </Route>
       </Switch>
     </div>

@@ -1,15 +1,10 @@
 import {IItem} from "~/services/getUserItems";
 
-const itemHasOldEmail = (item: IItem, itemList: Array<IItem>) => {
-  const reusedItems = itemList.filter((listItem) => (
-    
-    
-    listItem.email === item.email
-  ))
-  console.log("Comparing if item has old email");
-  console.log();
-  
-  return reusedItems.length > 1;
+const itemHasOldEmail = (item: IItem) => {
+    const date = new Date(item.createdAt).getTime();
+    const now = new Date().getTime();
+    return (now - date > 1000/*ms*/ * 60/*s*/ * 60/*min*/ * 24/*h*/ * 30/*days*/)
+     
 };
 
 export default itemHasOldEmail;
