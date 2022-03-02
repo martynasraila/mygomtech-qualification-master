@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { Routes } from "~/constants";
 import login from "~/services/login";
 import ErrorBlock from "../ErrorBlock";
+import LoadingScreen from "../LoadingScreen";
 
 import "./login-style.scss";
 
@@ -13,11 +14,12 @@ const Login = () => {
 		password: "",
 	});
 	const [errorMessage, setErrorMessage] = useState<string>();
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	const handleSubmit = async (event: SyntheticEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		setErrorMessage(null);
-
+		setIsLoading(true);
 		try {
 			const result = await login(credentials.username, credentials.password);
 			// If there's an error during login then set the error message, otherwise push the new path
@@ -25,10 +27,11 @@ const Login = () => {
 		} catch (error) {
 			setErrorMessage(error.message);
 		}
+		setIsLoading(false);
 	};
 
 	const onChange = (e) => {
-    setErrorMessage("");
+		setErrorMessage("");
 		const { name, value } = e.target;
 		setCredentials({ ...credentials, [name]: value });
 	};
@@ -44,7 +47,7 @@ const Login = () => {
 					name="username"
 					type="text"
 					className="input mt-52px"
-          required
+					required
 				/>
 				<input
 					value={credentials.password}
@@ -53,9 +56,9 @@ const Login = () => {
 					type="password"
 					name="password"
 					className="input mt-24px"
-          required
+					required
 				/>
-				<ErrorBlock error={errorMessage} />
+				{isLoading ? <LoadingScreen/> : <ErrorBlock error={errorMessage} /> }
 				<button type="submit" className="button mt-24px">
 					Login
 				</button>
