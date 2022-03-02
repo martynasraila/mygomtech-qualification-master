@@ -1,56 +1,67 @@
-import {SyntheticEvent, useState} from 'react';
-import {useHistory} from 'react-router-dom';
-import {Routes} from '~/constants';
-import login from '~/services/login';
-import ErrorBlock from '../ErrorBlock';
+import { SyntheticEvent, useState } from "react";
+import { useHistory } from "react-router-dom";
+import { Routes } from "~/constants";
+import login from "~/services/login";
+import ErrorBlock from "../ErrorBlock";
 
-import './login-style.scss';
+import "./login-style.scss";
 
 const Login = () => {
-  const {push} = useHistory();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState<string>();
+	const { push } = useHistory();
+	const [credentials, setCredentials] = useState({
+		username: "",
+		password: "",
+	});
+	const [errorMessage, setErrorMessage] = useState<string>();
 
-  const handleSubmit = async (event: SyntheticEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setErrorMessage(null);
+	const handleSubmit = async (event: SyntheticEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		setErrorMessage(null);
 
-    try {
-      await login(username, password);
-      push(Routes.Users);
-    } catch (error) {
-      setErrorMessage(error.message);
-    }
-  };
+		try {
+			const result = await login(credentials.username, credentials.password);
+			// If there's an error during login then set the error message, otherwise push the new path
+			result ? setErrorMessage(result) : push(Routes.Users);
+		} catch (error) {
+			setErrorMessage(error.message);
+		}
+	};
 
-  return (
-    <div className="login-page">
-      <form className="login-form" onSubmit={handleSubmit}>
-        <h1 className="text-center">
-          Mygom.tech
-        </h1>
-        <input
-          value={username}
-          onChange={(event) => setUsername(event.target.value)}
-          placeholder="Username"
-          type="text"
-          className="input mt-52px"
-        />
-        <input
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          placeholder="Password"
-          type="password"
-          className="input mt-24px"
-        />
-        <ErrorBlock error={errorMessage}/>
-        <button type="submit" className="button mt-24px">
-          Login
-        </button>
-      </form>
-    </div>
-  )
+	const onChange = (e) => {
+    setErrorMessage("");
+		const { name, value } = e.target;
+		setCredentials({ ...credentials, [name]: value });
+	};
+
+	return (
+		<div className="login-page">
+			<form className="login-form" onSubmit={handleSubmit}>
+				<h1 className="text-center">Mygom.tech</h1>
+				<input
+					value={credentials.username}
+					onChange={onChange}
+					placeholder="Username"
+					name="username"
+					type="text"
+					className="input mt-52px"
+          required
+				/>
+				<input
+					value={credentials.password}
+					onChange={onChange}
+					placeholder="Password"
+					type="password"
+					name="password"
+					className="input mt-24px"
+          required
+				/>
+				<ErrorBlock error={errorMessage} />
+				<button type="submit" className="button mt-24px">
+					Login
+				</button>
+			</form>
+		</div>
+	);
 };
 
 export default Login;
