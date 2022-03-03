@@ -35,12 +35,15 @@ const UpdateModal: FC<IUpdateModal> = (props: { item; refetch }) => {
 		await updateItem(newItem).then(props.refetch);
 	};
 
+	{Modal.setAppElement('body')}
+
 	return (
 		<>
 			<button className="update" onClick={() => setShowModal(true)}>
 				Update Email
 			</button>
 			<Modal
+			
 				className="modal"
 				isOpen={showModal}
 				onRequestClose={() => setShowModal(false)}
