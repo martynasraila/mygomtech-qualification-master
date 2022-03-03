@@ -5,20 +5,35 @@ import updateItem from "../../../../services/updateItem";
 import Modal from "react-modal";
 
 import "./list-style.scss";
+import itemHasWrongEmail from "~/utils/itemHasWrongEmail";
+import ErrorBlock from "~/components/ErrorBlock";
 
 interface IList {
 	items: Array<IItem>;
-  refetch: () => void;
+	refetch: () => void;
 }
 
 interface IUpdateModal {
 	item: IItem;
-  refetch: () => void;
+	refetch: () => void;
 }
 
-const UpdateModal: FC<IUpdateModal> = (props: { item, refetch}) => {
+const UpdateModal: FC<IUpdateModal> = (props: { item; refetch }) => {
 	const [showModal, setShowModal] = useState(false);
-	const [newEmail, setNewEmail] = useState("");
+	const [newEmail, setNewEmail] = useState({ email: "", error: ""});
+
+	const onSubmit = async () => {
+		const newItem = {
+			...props.item,
+			email: newEmail.email,
+		};
+		if (itemHasWrongEmail(newItem)) {
+      setNewEmail({ ...newEmail, error: "Email is incorrect"})
+      // setShowModal(true)
+			return;
+		}
+		await updateItem(newItem).then(props.refetch);
+	};
 
 	return (
 		<>
@@ -35,17 +50,17 @@ const UpdateModal: FC<IUpdateModal> = (props: { item, refetch}) => {
 				<input
 					placeholder="New Email"
 					className="input"
-					value={newEmail}
-					onChange={(event) => setNewEmail(event.target.value)}
+					value={newEmail.email}
+					onChange={(event) =>
+						setNewEmail({ ...newEmail, email: event.target.value })
+					}
 				/>
+        <ErrorBlock error={newEmail.error} />
 				<div className="pt-12px text-center">
 					<button
 						className="button"
-						onClick={async () => {
-							await updateItem({
-								...props.item,
-								email: newEmail,
-							}).then(props.refetch);              
+						onClick={() => {
+							onSubmit();
 						}}
 					>
 						Change
@@ -64,7 +79,7 @@ const UpdateModal: FC<IUpdateModal> = (props: { item, refetch}) => {
 	);
 };
 
-const List: FC<IList> = (props: { items , refetch}) => (
+const List: FC<IList> = (props: { items; refetch }) => (
 	<ul className="list">
 		{props.items.map((item) => (
 			<li className="item" key={item.name}>
@@ -73,7 +88,7 @@ const List: FC<IList> = (props: { items , refetch}) => (
 					<div className="title">{item.name}</div>
 					<div className="description">{item.email}</div>
 				</div>
-				<UpdateModal item={item} refetch={props.refetch}/>
+				<UpdateModal item={item} refetch={props.refetch} />
 			</li>
 		))}
 	</ul>
