@@ -10,6 +10,7 @@ import itemHasWeakPassword from "~/utils/itemHasWeakPassword";
 import itemHasReusedEmail from "~/utils/itemHasReusedEmail";
 import itemHasOldEmail from "~/utils/itemHasOldEmail";
 import { useUserContext } from "../UserContext";
+import itemHasWrongEmail from "~/utils/itemHasWrongEmail";
 
 const UsersManagement = () => {
 	const {
@@ -53,6 +54,12 @@ const UsersManagement = () => {
 				<Route path={Routes.Old}>
 					<List
 						items={items.filter((item) => itemHasOldEmail(item))}
+						refetch={fetch}
+					/>
+				</Route>
+				<Route path={Routes.Wrong}>
+					<List
+						items={items.filter((item) => itemHasWrongEmail(item))}
 						refetch={fetch}
 					/>
 				</Route>
