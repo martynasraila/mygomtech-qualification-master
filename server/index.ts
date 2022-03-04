@@ -1,7 +1,5 @@
 import cors from 'cors';
-import express from 'express';
-import bodyParser from 'body-parser';
-
+import express, {RequestHandler} from 'express';
 import authentication from './endpoints/authentication';
 import items from './endpoints/items';
 
@@ -10,11 +8,11 @@ import logger from './middleware/logger';
 
 const app = express();
 
-app.use(bodyParser.urlencoded({
+app.use(express.urlencoded({
     extended: true
-}));
+}) as RequestHandler);
 
-app.use(bodyParser.json());
+app.use(express.json() as RequestHandler);
 
 // middleware
 app.use(cors());
